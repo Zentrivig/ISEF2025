@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="./p5.js"></script>
+  <script src="./wordfreq-333k.js"></script>
+  <title>Natural Language Compression</title>
+
+  <style>
+    .input-container {
+      padding-right: 7px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      resize: vertical;
+      font-size: medium;
+    }
+    p {
+      font-family: monospace;
+      font-size: medium;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Natural Language Compression NLC-333k v1</h1>
+    <p id="stats"></p><br>
+    <div class="input-container">
+      <label for="og">Natural Language Input</label>
+      <textarea id="og" name="og" onKeyUp="refresh()"></textarea>
+    </div>
+    <div class="output-container">
+      <label for="outin">Original</label>
+      <p type="text" id="outin" name="outin"></p>
+      <label for="out">Interpretation</label>
+      <p type="text" id="out" name="out"></p>
+      <label for="bitarray">NLC Encoded</label>
+      <p type="text" id="bitarray" name="bitarray"></p>
+      <label for="bitarray">ASCII Encoded</label>
+      <p type="text" id="ascii" name="ascii"></p>
+    </div>
+    <script src="./script.js"></script>
+  </main>
+</body>
+
+</html>
