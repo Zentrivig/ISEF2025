@@ -99,7 +99,7 @@ function refresh() {
 	// IDs
 	let j = indexArray.length * 3 + 3
 	for (let i = 0; i < indexArray.length; i++) {
-		idArray.push(bin2dec(encoded.substring(j + 3, j + 4 * indexArray[i] + 3)))
+		idArray.push(bin2dec(encoded.substring(j, j + 4 * indexArray[i])))
 		j = j + 4 * indexArray[i]
 	}
 
