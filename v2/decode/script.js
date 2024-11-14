@@ -93,7 +93,7 @@ function refresh() {
 	
 	for (let i = 0; true; i++) {
 		if (encoded.substring(3 * i + 3, 3 * i + 6) == "000") break
-		indexArray.push(bin2dec(encoded.substring(3 * i + 3, 3 * i + 6)))
+		indexArray.push(bin2dec(encoded.substring(3 * i, 3 * i + 3)))
 	}
 
 	// IDs
