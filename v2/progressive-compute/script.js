@@ -215,11 +215,11 @@ function refresh() {
 		// Create binary datastream
 
 		// Control
-		bitArray.push(
-			simplicity ? 1 : 0,
-			wordModel == "web333k" ? 0 : 1,
-			punctuationOrder
-		)
+		//bitArray.push(
+		//	simplicity ? 1 : 0,
+		//	wordModel == "web333k" ? 0 : 1,
+		//	punctuationOrder
+		//)
 		if (brackets) formattedBitArray.push(simplicity ? 1 : 0, wordModel == "web333k" ? 0 : 1, punctuationOrder, " - ")
 		step++
 	}
@@ -235,7 +235,7 @@ function refresh() {
 
 	if (step == 5) {
 		bitArray.push("000")
-		if (brackets) formattedBitArray.push(" (000) - ")
+		if (brackets) formattedBitArray.push("(000) - ")
 		step++
 	}
 
@@ -297,8 +297,8 @@ function decode() {
 
 	// Indexes
 	for (let i = 0; true; i++) {
-		if (encoded.substring(3 * i + 3, 3 * i + 6) == "000") break
-		indexArray.push(bin2dec(encoded.substring(3 * i + 3, 3 * i + 6)))
+		if (encoded.substring(3 * i, 3 * i + 3) == "000") break
+		indexArray.push(bin2dec(encoded.substring(3 * i, 3 * i + 3)))
 	}
 
 	// IDs
