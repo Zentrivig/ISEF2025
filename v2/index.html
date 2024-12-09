@@ -6,7 +6,7 @@
   <script src="./1k-wikipedia.js"></script>
   <script src="./333k-web.js"></script>
   <script src="./eng_news_2023_10K-sentences.js"></script>
-  <title>Natural Language Encoder v2</title>
+  <title>Natural Language Encoder</title>
   <link rel="stylesheet" href="darkmode.css">
   <style>
     .input-container {
@@ -40,7 +40,7 @@
 
 <body>
   <main>
-    <a href="./decode">Natural Language Decoder</a><br>
+    <a href="./decode">NLC Decoder</a><br>
     <a href="./progressive-compute/">Progressive-Compute</a>
     <h1>Natural Language Encoder v2</h1>
     <p id="stats"></p>
@@ -58,7 +58,9 @@
     <div class="output-container">
       <h2 for="outin">Original</h2>
       <label for="toggle-brackets">Render Brackets</label>
-      <input type="checkbox" id="toggle-brackets" name="toggle-brackets" onchange="toggleBrackets()">
+      <input type="checkbox" id="toggle-brackets" name="toggle-brackets" onchange="toggleBrackets()"><br>
+      <label for="toggle-xon">Render Uppercase Control Character</label>
+      <input type="checkbox" id="toggle-xon" name="toggle-xon" onchange="toggleXON()" checked="true">
       <p type="text" id="outin" name="outin"></p>
       <h2 for="out">Interpretation</h2>
       <p type="text" id="out" name="out"></p>

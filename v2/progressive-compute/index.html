@@ -5,7 +5,7 @@
   <script src="../p5.js"></script>
   <script src="../1k-wikipedia.js"></script>
   <script src="../333k-web.js"></script>
-  <title>Natural Language Progressive Compute</title>
+  <title>Natural Language Compression</title>
   <link rel="stylesheet" href="../darkmode.css">
   <style>
     .input-container {
@@ -38,8 +38,8 @@
 
 <body>
   <main>
-    <a href="../">Natural Language Encoder</a>
-    <h1>Natural Language Encoder v2 (Progressive-Compute)</h1>
+    <a href="../">Natural Language Compression</a>
+    <h1>Natural Language Compression v2.0 (Progressive-Compute)</h1>
     <p id="stats"></p>
     <div class="dropdown-container">
       <label for="wordModel-select">NLC Word Model:</label>
@@ -56,7 +56,9 @@
     <div class="output-container">
       <h2 for="outin">Original</h2>
       <label for="toggle-brackets">Render Brackets</label>
-      <input type="checkbox" id="toggle-brackets" name="toggle-brackets" onchange="toggleBrackets()">
+      <input type="checkbox" id="toggle-brackets" name="toggle-brackets" onchange="toggleBrackets()"><br>
+      <label for="toggle-xon">Render Uppercase Control Character</label>
+      <input type="checkbox" id="toggle-xon" name="toggle-xon" onchange="toggleXON()" checked="true">
       <p type="text" id="outin" name="outin"></p>
       <h2 for="out">Interpretation</h2>
       <p type="text" id="out" name="out"></p>

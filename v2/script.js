@@ -1,43 +1,6 @@
 // Letters sorted by frequency on https://en.wikipedia.org/wiki/Letter_frequency
-const specialIDs = [
-	"e",
-	"t",
-	"a",
-	"o",
-	"n",
-	"r",
-	"i",
-	"s",
-	"h",
-	"d",
-	"l",
-	"f",
-	"c",
-	"m",
-	"u",
-	"g",
-	"y",
-	"p",
-	"w",
-	"b",
-	"v",
-	"k",
-	"j",
-	"x",
-	"z",
-	"q",
-	"0",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"�",
-]
+const specialIDs = [ "e", "t", "a", "o", "n", "r", "i", "s", "h", "d", "l", "f", "c", "m", "u", "g", "y", "p", "w", "b", "v", "k", "j", "x", "z", "q", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "�" ]
+const XON = "␑" // Uppercase control (ASCII Device Control One (XON)) is set as a constant, because ␑ is difficult to type and not monospaced
 const punctuation = [
 	".",
 	",",
@@ -51,24 +14,27 @@ const punctuation = [
 	"?",
 	"/",
 	"!",
-	"&",
 	";",
 	"\n",
 	" ",
+	XON,
 ]
+
 let encoded = ""
 let decoded = []
-let formattedarray = []
+let formattedArray = []
 let formattedBitArray = []
 
 const maxRatio = 9 // Aesthetics (Calculated manually dependent on dataset)
 const blueThreshold = 3 // Aesthetics
 
-let brackets = true
+let brackets = false
+let renderXON = true
 
 let startTime
 let endTime
 let timeDelta
+
 /*
 let timeTesting = false
 let iteration = 0
@@ -101,6 +67,11 @@ function copyBitArray() {
 	if (!brackets) navigator.clipboard.writeText(encoded);
 } 
 
+function toggleXON() {
+	renderXON = document.getElementById("toggle-xon").checked
+	refresh()
+}
+
 function draw() {
 	//startTimeTest()
 }
@@ -114,8 +85,6 @@ function copyWords() {
 
 	navigator.clipboard.writeText(timeData.join("\n").replaceAll(",", "\t"));
 }
-
-
 
 function startTimeTest() {
 	timeTesting = true
@@ -135,7 +104,7 @@ function refresh() {
 	let wordModel = wordModelGlobal
 	let og = ""
 	let idArray = []
-	formattedarray = []
+	formattedArray = []
 	formattedBitArray = []
 	let bitArray = []
 
@@ -144,14 +113,15 @@ function refresh() {
 
 	og = document.getElementById("og").value
 
-	// Convert og to rawArray (seperate by space and punctuation)
-	let raw = og.toLowerCase();
+	let raw = og.replaceAll(/([A-Z])/g, "␑$1").toLowerCase() // Replace uppercase characters with upppercase control characters
 	let rawArray = []
 	let sp = 0
 	let i = 0
 	let punct = ""
+	
+	// Convert og to rawArray (seperate by space and punctuation)
 	while (i < raw.length) {
-		while (!punctuation.includes(raw.charAt(i))) { // Increase i until a punctuation is reached
+		while (!(punctuation.includes(raw.charAt(i)))) { // Increase i until a punctuation is reached
 			i++
 			if (i >= raw.length) break // Protects against freezing
 		}
@@ -179,20 +149,20 @@ function refresh() {
 		if (punctuation.includes(rawArray[i])) {
 			// Check punctuation
 			idArray.push(punctuation.indexOf(rawArray[i]))
-			if (brackets) formattedarray.push(`<span style="color: #ffd700;">[${rawArray[i].replace("\n", "<br>")}]</span>`)
-			if (!brackets) formattedarray.push(`<span style="color: #ffd700;">${rawArray[i].replace("\n", "<br>")}</span>`)
+			if (brackets) formattedArray.push(`<span style="color: #ffd700;">[${rawArray[i].replace("\n", "<br>")}]</span>`)
+			if (!brackets) formattedArray.push(`<span style="color: #ffd700;">${rawArray[i].replace("\n", "<br>").replace(XON, renderXON ? XON : "")}</span>`)
 		} else if (words.includes(rawArray[i])) {
 			// Check words
 			idArray.push(words.indexOf(rawArray[i]) + punctuation.length + specialIDs.length)
 
 			// Format text
-			let idNybbleSize = Math.ceil(dec2bin(words.indexOf(rawArray[i].toLowerCase()) + punctuation.length, 0).length / 4)
+			let idNybbleSize = Math.ceil(dec2bin(words.indexOf(rawArray[i].toLowerCase()) + punctuation.length, 0).length / 4) + 0.75
 			let asciiNybbleSize = ascii2bin(rawArray[i]).length / 4
 			let x = asciiNybbleSize / idNybbleSize // Ratio
 			let t = blueThreshold
 			let m = maxRatio
-			if (brackets) formattedarray.push(`<span style="color: rgb(${x < t ? 255 - 255 * x / t : 0}, 255, ${x >= t ? 255 * (x - t) / (m - t) : 255 - 255 * x / t});">(${rawArray[i]})</span>${!(punctuation.includes(rawArray[i + 1])) && rawArray[i + 1] != "" ? " " : ""}`) // Adds text to formattedarray, along with whitespace if there is not following puntuation
-			if (!brackets) formattedarray.push(`<span style="color: rgb(${x < t ? 255 - 255 * x / t : 0}, 255, ${x >= t ? 255 * (x - t) / (m - t) : 255 - 255 * x / t});">${rawArray[i]}</span>${!(punctuation.includes(rawArray[i + 1])) && rawArray[i + 1] != "" ? " " : ""}`)
+			if (brackets) formattedArray.push(`<span style="color: rgb(${x < t ? 255 - 255 * x / t : 0}, 255, ${x >= t ? 255 * (x - t) / (m - t) : 255 - 255 * x / t});">(${rawArray[i]})</span>${!(punctuation.includes(rawArray[i + 1])) && rawArray[i + 1] != "" ? " " : ""}`) // Adds text to formattedArray, along with whitespace if there is not following puntuation
+			if (!brackets) formattedArray.push(`<span style="color: rgb(${x < t ? 255 - 255 * x / t : 0}, 255, ${x >= t ? 255 * (x - t) / (m - t) : 255 - 255 * x / t});">${rawArray[i]}</span>${!(punctuation.includes(rawArray[i + 1])) && rawArray[i + 1] != "" ? " " : ""}`)
 			/* Color control for words:
 				Channels
 					Red
@@ -204,7 +174,8 @@ function refresh() {
 						Follows red channel until blueThreshold
 						Linearly increases from (blueThreshold, 0) to (maxRatio, 255)
 				Effect
-					Low ratios are whiter, and become greener as the ratio increases until the blueThreshold. After that, they become cyaner until maxRatio, the most efficient word.
+					Low ratios are whiter, and become greener as the ratio increases until the blueThreshold. After that, they become cyaner until maxRatio, where it stays at pure rgb(0, 255, 255).
+				https://www.desmos.com/calculator/lz5uv3al8y
 			*/
 		} else if (rawArray[i] != "") {
 			// Create words from letters, numbers, and unknown character
@@ -212,18 +183,20 @@ function refresh() {
 				idArray.push(specialIDs.indexOf(rawArray[i][j]) + punctuation.length)
 				if(!specialIDs.includes(rawArray[i][j])) idArray.push(specialIDs.indexOf("�") + punctuation.length)
 			}
-			if (brackets) formattedarray.push(`<span style="color: rgb(255, 0, 0);">{${rawArray[i]}}</span>`)
-			if (!brackets) formattedarray.push(`<span style="color: rgb(255, 0, 0);">${rawArray[i]}</span>`)
+			if (brackets) formattedArray.push(`<span style="color: rgb(255, 0, 0);">{${rawArray[i]}}</span>`)
+			if (!brackets) formattedArray.push(`<span style="color: rgb(255, 0, 0);">${rawArray[i]}</span>`)
 			if (!punctuation.includes(rawArray[i + 1])) {
 				idArray.push(punctuation.indexOf(" "))
-				formattedarray.push(" ")
+				if (!brackets) formattedArray.push(" ")
+				if (brackets) formattedArray.push('<span style="color: #ffd700;">[ ]</span>')
 			}
 		}
 	}
+"Hello" 
 
 	// Create binary datastream
 
-	// Control
+	// Control (could be useful in future iterations, disabled for now)
 	//bitArray.push(
 	//	simplicity ? 1 : 0,
 	//	wordModel == "web333k" ? 0 : 1,
@@ -260,8 +233,8 @@ function refresh() {
 	decode()
 	if (brackets) document.getElementById("bitarray").innerHTML = formattedBitArray.join("")
 	if (!brackets) document.getElementById("bitarray").innerHTML = encoded
-	document.getElementById("outin").innerHTML = formattedarray.join("")
-	document.getElementById("out").innerHTML = decoded.join("")
+	document.getElementById("outin").innerHTML = formattedArray.join("")
+	document.getElementById("out").innerHTML = decoded
 	document.getElementById("ascii").innerHTML = ascii2bin(og)
 
 	endTime = Date.now()
@@ -275,6 +248,10 @@ function refresh() {
 
 }
 
+function isUppercase(char) {
+	return char.toUpperCase() == char
+}
+
 function decode() {
 	let indexArray = []
 	let idArray = []
@@ -282,11 +259,11 @@ function decode() {
 	decoded = []
 
 	// Control
-	let simplicity = encoded[0] == 0 ? false : true
-	if (!simplicity) {
-		let wordModel = encoded[1] == 0 ? "web333k" : "wikipedia1k"
-		let punctuationOrder = encoded[2]
-	}
+	//let simplicity = encoded[0] == 0 ? false : true
+	//if (!simplicity) {
+	//	let wordModel = encoded[1] == 0 ? "web333k" : "wikipedia1k"
+	//	let punctuationOrder = encoded[2]
+	//}
 
 	// Indexes
 	for (let i = 0; true; i++) {
@@ -295,9 +272,9 @@ function decode() {
 	}
 
 	// IDs
-	let j = indexArray.length * 3 + 3
+	let j = indexArray.length * 3
 	for (let i = 0; i < indexArray.length; i++) {
-		idArray.push(bin2dec(encoded.substring(j, j + 4 * indexArray[i])))
+		idArray.push(bin2dec(encoded.substring(j + 3, j + 4 * indexArray[i] + 3)))
 		j = j + 4 * indexArray[i]
 	}
 
@@ -308,6 +285,16 @@ function decode() {
 		// If word followed by word, place space
 		if (words.includes(idLookup[idArray[i]]) && (words.includes(idLookup[idArray[i + 1]]) || specialIDs.includes(idLookup[idArray[i+1]]))) decoded.push(" ")
 	}
+
+	// Create uppercases
+	decoded = decoded.join("").split("") // Turn into an array split by characters
+	for(let i = 0; i < decoded.length; i++) {
+		if (decoded[i] == XON) {
+			decoded.splice(i,1)
+			decoded[i] = decoded[i].toUpperCase()
+		}
+	}
+	decoded = decoded.join("")
 }
 
 function dec2bin(dec, length) {

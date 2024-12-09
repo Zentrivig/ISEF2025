@@ -1,43 +1,6 @@
 // Letters sorted by frequency on https://en.wikipedia.org/wiki/Letter_frequency
-const specialIDs = [
-	"e",
-	"t",
-	"a",
-	"o",
-	"n",
-	"r",
-	"i",
-	"s",
-	"h",
-	"d",
-	"l",
-	"f",
-	"c",
-	"m",
-	"u",
-	"g",
-	"y",
-	"p",
-	"w",
-	"b",
-	"v",
-	"k",
-	"j",
-	"x",
-	"z",
-	"q",
-	"0",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"�",
-]
+const specialIDs = [ "e", "t", "a", "o", "n", "r", "i", "s", "h", "d", "l", "f", "c", "m", "u", "g", "y", "p", "w", "b", "v", "k", "j", "x", "z", "q", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "�" ]
+const XON = "␑" // Uppercase control (ASCII Device Control One (XON)) is set as a constant, because ␑ is difficult to type and not monospaced
 const punctuation = [
 	".",
 	",",
@@ -51,21 +14,21 @@ const punctuation = [
 	"?",
 	"/",
 	"!",
-	"&",
 	";",
 	"\n",
 	" ",
+	XON,
 ]
 let encoded = ""
 let decoded = []
-let formattedarray = []
+let formattedArray = []
 let formattedBitArray = []
 
 const maxRatio = 16 // Calculated manually (dependent on dataset)
 const blueThreshold = 2 // Aesthetics
 
 let brackets = true
-
+let renderXON = true
 
 let words = []
 
@@ -85,7 +48,7 @@ let sp
 let i
 let punct
 
-let speed = 20
+let speed = 10
 
 let asciiOut
 
@@ -108,6 +71,11 @@ function copyBitArray() {
 	if (!brackets) navigator.clipboard.writeText(encoded);
 }
 
+function toggleXON() {
+	renderXON = document.getElementById("toggle-xon").checked
+	refresh()
+}
+
 function startCompute() {
 	step = 0
 	asciiOut = ascii2bin(document.getElementById("og").value)
@@ -125,16 +93,21 @@ function copyWords() {
 	navigator.clipboard.writeText(wordRatios.join("\n"));
 }
 
-let i0 = 0
-let i1 = 0
-let i2 = 0
-let i3 = 0
+let i0
+let i1
+let i2
+let i3
 
 function refresh() {
 	if (step == 0) {
+		i0 = 0
+		i1 = 0
+		i2 = 0
+		i3 = 0
+
 		wordModel = wordModelGlobal
 		idArray = []
-		formattedarray = []
+		formattedArray = []
 		formattedBitArray = []
 		bitArray = []
 
@@ -144,7 +117,7 @@ function refresh() {
 		og = document.getElementById("og").value
 
 		// Convert og to rawArray (seperate by space and punctuation)
-		raw = og.toLowerCase();
+		raw = og.replaceAll(/([A-Z])/g, "␑$1").toLowerCase() // Replace uppercase characters with upppercase control characters
 		rawArray = []
 		sp = 0
 		i = 0
@@ -185,14 +158,14 @@ function refresh() {
 			if (punctuation.includes(rawArray[i1])) {
 				// Check punctuation
 				idArray.push(punctuation.indexOf(rawArray[i1]))
-				if (brackets) formattedarray.push(`<span style="color: #ffd700;">[${rawArray[i1].replace("\n", "<br>")}]</span>`)
-				if (!brackets) formattedarray.push(`<span style="color: #ffd700;">${rawArray[i1].replace("\n", "<br>")}</span>`)
+				if (brackets) formattedArray.push(`<span style="color: #ffd700;">[${rawArray[i1].replace("\n", "<br>")}]</span>`)
+				if (!brackets) formattedArray.push(`<span style="color: #ffd700;">${rawArray[i1].replace("\n", "<br>").replace(XON, renderXON ? XON : "")}</span>`)
 			} else if (words.includes(rawArray[i1])) {
 				// Check words
 				idArray.push(words.indexOf(rawArray[i1]) + punctuation.length + specialIDs.length)
 
-				if (brackets) formattedarray.push(`<span style="color: rgb(0,255,0);">(${rawArray[i1]})</span>${!(punctuation.includes(rawArray[i1 + 1])) && rawArray[i1 + 1] != "" ? " " : ""}`) // Adds text to formattedarray, along with whitespace if there is not following puntuation
-				if (!brackets) formattedarray.push(`<span style="color: rgb(0,255,0);">${rawArray[i1]}</span>${!(punctuation.includes(rawArray[i1 + 1])) && rawArray[i1 + 1] != "" ? " " : ""}`)
+				if (brackets) formattedArray.push(`<span style="color: rgb(0,255,0);">(${rawArray[i1]})</span>${!(punctuation.includes(rawArray[i1 + 1])) && rawArray[i1 + 1] != "" ? " " : ""}`) // Adds text to formattedArray, along with whitespace if there is not following puntuation
+				if (!brackets) formattedArray.push(`<span style="color: rgb(0,255,0);">${rawArray[i1]}</span>${!(punctuation.includes(rawArray[i1 + 1])) && rawArray[i1 + 1] != "" ? " " : ""}`)
 				
 			} else if (rawArray[i1] != "") {
 				// Create words from letters, numbers, and unknown character
@@ -200,11 +173,11 @@ function refresh() {
 					idArray.push(specialIDs.indexOf(rawArray[i1][j]) + punctuation.length)
 					if (!specialIDs.includes(rawArray[i1][j])) idArray.push(specialIDs.indexOf("�") + punctuation.length)
 				}
-				if (brackets) formattedarray.push(`<span style="color: rgb(255, 0, 0);">{${rawArray[i1]}}</span>`)
-				if (!brackets) formattedarray.push(`<span style="color: rgb(255, 0, 0);">${rawArray[i1]}</span>`)
+				if (brackets) formattedArray.push(`<span style="color: rgb(255, 0, 0);">{${rawArray[i1]}}</span>`)
+				if (!brackets) formattedArray.push(`<span style="color: rgb(255, 0, 0);">${rawArray[i1]}</span>`)
 				if (!punctuation.includes(rawArray[i1 + 1])) {
 					idArray.push(punctuation.indexOf(" "))
-					formattedarray.push(" ")
+					formattedArray.push(" ")
 				}
 			}
 			i1++
@@ -214,13 +187,13 @@ function refresh() {
 	if (step == 3) {
 		// Create binary datastream
 
-		// Control
+		// Control (could be useful in future iterations, disabled for now)
 		//bitArray.push(
 		//	simplicity ? 1 : 0,
 		//	wordModel == "web333k" ? 0 : 1,
 		//	punctuationOrder
 		//)
-		if (brackets) formattedBitArray.push(simplicity ? 1 : 0, wordModel == "web333k" ? 0 : 1, punctuationOrder, " - ")
+		//if (brackets) formattedBitArray.push(simplicity ? 1 : 0, wordModel == "web333k" ? 0 : 1, punctuationOrder, " - 	")
 		step++
 	}
 
@@ -235,7 +208,7 @@ function refresh() {
 
 	if (step == 5) {
 		bitArray.push("000")
-		if (brackets) formattedBitArray.push("(000) - ")
+		if (brackets) formattedBitArray.push(" (000) - ")
 		step++
 	}
 
@@ -262,7 +235,7 @@ function refresh() {
 	}
 
 	if (step == 7) {
-		//decode()
+		decode()
 		step = -1
 	}
 	
@@ -270,8 +243,8 @@ function refresh() {
 		encoded = bitArray.join("")
 		if (brackets) document.getElementById("bitarray").innerHTML = formattedBitArray.join("")
 		if (!brackets) document.getElementById("bitarray").innerHTML = encoded
-		document.getElementById("outin").innerHTML = formattedarray.join("")
-		document.getElementById("out").innerHTML = decoded.join("")
+		document.getElementById("outin").innerHTML = formattedArray.join("")
+		document.getElementById("out").innerHTML = decoded
 		document.getElementById("ascii").innerHTML = asciiOut
 
 		document.getElementById("stats").innerHTML =
@@ -289,11 +262,11 @@ function decode() {
 	decoded = []
 
 	// Control
-	let simplicity = encoded[0] == 0 ? false : true
-	if (!simplicity) {
-		let wordModel = encoded[1] == 0 ? "web333k" : "wikipedia1k"
-		let punctuationOrder = encoded[2]
-	}
+	//let simplicity = encoded[0] == 0 ? false : true
+	//if (!simplicity) {
+	//	let wordModel = encoded[1] == 0 ? "web333k" : "wikipedia1k"
+	//	let punctuationOrder = encoded[2]
+	//}
 
 	// Indexes
 	for (let i = 0; true; i++) {
@@ -302,19 +275,29 @@ function decode() {
 	}
 
 	// IDs
-	let j = indexArray.length * 3 + 3
+	let j = indexArray.length * 3
 	for (let i = 0; i < indexArray.length; i++) {
-		idArray.push(bin2dec(encoded.substring(j, j + 4 * indexArray[i])))
+		idArray.push(bin2dec(encoded.substring(j + 3, j + 4 * indexArray[i] + 3)))
 		j = j + 4 * indexArray[i]
 	}
 
 	// Convert IDs to content
 	for (let i = 0; i < idArray.length; i++) {
 		decoded.push(idLookup[idArray[i]].replace("\n", "<br>"))
-
+		
 		// If word followed by word, place space
-		if (words.includes(idLookup[idArray[i]]) && (words.includes(idLookup[idArray[i + 1]]) || specialIDs.includes(idLookup[idArray[i + 1]]))) decoded.push(" ")
+		if (words.includes(idLookup[idArray[i]]) && (words.includes(idLookup[idArray[i + 1]]) || specialIDs.includes(idLookup[idArray[i+1]]))) decoded.push(" ")
 	}
+
+	// Create uppercases
+	decoded = decoded.join("").split("") // Turn into an array split by characters
+	for(let i = 0; i < decoded.length; i++) {
+		if (decoded[i] == XON) {
+			decoded.splice(i,1)
+			decoded[i] = decoded[i].toUpperCase()
+		}
+	}
+	decoded = decoded.join("")
 }
 
 function dec2bin(dec, length) {

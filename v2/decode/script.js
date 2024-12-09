@@ -1,43 +1,6 @@
 // Letters sorted by frequency on https://en.wikipedia.org/wiki/Letter_frequency
-const specialIDs = [
-	"e",
-	"t",
-	"a",
-	"o",
-	"n",
-	"r",
-	"i",
-	"s",
-	"h",
-	"d",
-	"l",
-	"f",
-	"c",
-	"m",
-	"u",
-	"g",
-	"y",
-	"p",
-	"w",
-	"b",
-	"v",
-	"k",
-	"j",
-	"x",
-	"z",
-	"q",
-	"0",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"�",
-]
+const specialIDs = [ "e", "t", "a", "o", "n", "r", "i", "s", "h", "d", "l", "f", "c", "m", "u", "g", "y", "p", "w", "b", "v", "k", "j", "x", "z", "q", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "�" ]
+const XON = "␑" // Uppercase control (ASCII Device Control One (XON)) is set as a constant, because ␑ is difficult to type and not monospaced
 const punctuation = [
 	".",
 	",",
@@ -51,10 +14,10 @@ const punctuation = [
 	"?",
 	"/",
 	"!",
-	"&",
 	";",
 	"\n",
 	" ",
+	XON,
 ]
 let encoded = ""
 let decoded = []
@@ -80,20 +43,23 @@ function refresh() {
 	let idArray = []
 	let idLookup = [...punctuation,...specialIDs,...words]
 	decoded = []
-	console.log(encoded)
 	
 	// Control
-	let simplicity = encoded[0] == 0 ? false : true
-	if (!simplicity) {
-		let wordModel = encoded[1] == 0 ? "web333k" : "wikipedia1k"
-		let punctuationOrder = encoded[2]
-	}
+	//let simplicity = encoded[0] == 0 ? false : true
+	//if (!simplicity) {
+	//	let wordModel = encoded[1] == 0 ? "web333k" : "wikipedia1k"
+	//	let punctuationOrder = encoded[2]
+	//}
 	
 	// Indexes
 	
 	for (let i = 0; true; i++) {
 		if (encoded.substring(3 * i, 3 * i + 3) == "000") break
 		indexArray.push(bin2dec(encoded.substring(3 * i, 3 * i + 3)))
+		if (i == encoded.length) {
+			document.getElementById("outin").innerHTML = "Parsing error (No stop code)"
+			return // Prevent freezing if binary is invalid
+		}
 	}
 
 	// IDs
@@ -111,7 +77,18 @@ function refresh() {
 		// If word followed by word, place space
 		if (words.includes(idLookup[idArray[i]]) && (words.includes(idLookup[idArray[i + 1]]) || specialIDs.includes(idLookup[idArray[i+1]]))) decoded.push(" ")
 	}
-	document.getElementById("outin").innerHTML = decoded.join("")
+
+// Create uppercases
+decoded = decoded.join("").split("") // Turn into an array split by characters
+for(let i = 0; i < decoded.length; i++) {
+	if (decoded[i] == XON) {
+		decoded.splice(i,1)
+		decoded[i] = decoded[i].toUpperCase()
+	}
+}
+decoded = decoded.join("")
+
+document.getElementById("outin").innerHTML = decoded
 }
 
 function bin2dec(bin) {
