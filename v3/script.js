@@ -284,7 +284,7 @@ function encode(inputString) {
 				i,
 				bitArray.IDs[i] + (i < (bitArray.IDs.length - 1) ? " |" : ""),
 				bin2dec(bitArray.IDs[i]),
-				web15.indexed.lexemes[bin2dec(bitArray.IDs[i])]
+				web15.indexed.lexemes[bin2dec(bitArray.IDs[i])].replace("\n", "\\n")
 			]
 			if (bitArray.indexes[i] == "111") {
 				values[3] = specialIDs[bin2dec(bitArray.IDs[i])]
