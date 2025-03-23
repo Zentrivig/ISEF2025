@@ -1,0 +1,99 @@
+h1 {
+    font-size: 1.75em;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 0px;
+}
+
+ul {
+    margin-top: 0px;
+    list-style: none;
+    padding-left: 0px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0.5%;
+    width: 99%;
+    margin: 0px;
+    display: flex;
+    flex-wrap: nowrap;
+    border-top-width: 1px;
+    border-top-style: solid;
+    padding-top: 8px;
+    background-color: #181a1b;
+    margin-bottom: 0px;
+    padding-bottom: 8px;
+}
+
+.merriweather {
+    font-family: "Merriweather", serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.subtitle {
+    font-size: .75em;
+    font-weight: 600;
+    font-style: italic;
+}
+
+header {
+    color: #b0b0b0;
+    background-color: #101112;
+    top: 0px;
+    margin: 0px;
+    h1 {
+        margin-top: 0px;
+        padding: 8px;
+    }
+}
+
+html {
+    background-color: #181a1b;
+    color: white;
+    font-size: 20px;
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 32px;
+}
+
+main {
+    margin: 8px;
+}
+
+a {
+    color: #0066cc
+}
+
+a:visited {
+    color: #3391ff
+}
+
+.side-by-side {
+    width: 100%;
+    margin: 0px;
+    display: flex;
+    flex-wrap: nowrap;
+    padding-top: 8px;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.horizontal-line {
+    width: 100%;
+    margin: 0px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    border-top-width: 1px;
+    border-top-style: solid;
+}

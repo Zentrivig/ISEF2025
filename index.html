@@ -1,20 +1,63 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLC (Natural Language Compression)</title>
+    <script src="script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
 <body>
+    <header>
+        <h1 class="merriweather">Efficient Lexical Encoding of Natural Language
+            <span class="subtitle"><br>Portal for Brian Heers's 2025 ISEF project</span>
+        </h1>
+    </header>
+
     <main>
-        <h1 style="font-size: large; margin-bottom: 0px;">Demo page for Brian Heers's 2025 ISEF project:</h1>
-        <a href="./Efficient Lexical Encoding of Natural Language.pdf">Efficient Lexical Encoding of Natural Language (PDF Paper)</a><br>
-        <h2 style="font-size: medium; margin-bottom: 0px;">Iteration Demos:</h2>
-        <ul style="margin-top: 0px; list-style: none; padding-left: 0px;">
+        <div class="side-by-side">
+            <div>
+                <h2>PDF Paper:</h2>
+                <a href="./paper.pdf">Efficient Lexical Encoding of Natural Language<br>(Optimized for two-page view)</a>
+            </div>
+            <div>
+                <h2>NLC Demo:</h2>
+                <a href="./v3/">NLC Iteration 3 (Working Prototype)</a>
+            </div>
+        </div><br>
+        <div class="horizontal-line"></div>
+        <h2>Iteration History:</h2>
+        <ul>
             <li><a href="./v1/">Iteration 1</a></li>
             <li><a href="./v2/">Iteration 2</a></li>
             <li><a href="./v3/">Iteration 3</a></li>
+            <li style="padding-left: 10px"><a href="./v3/subiterations/">Iteration 3 Subiterations</a></li>
+        </ul>
+        <h2>Data Analysis Files:</h2>
+        <ul>
+            <li>Iteration 2</li>
+            <div style="padding-left: 10px">
+                <li><a href="./v2/v2-testing.xlsx">Efficiency and Speed Tests</a></li>
+                <li><a href="./v2/web333k-ratios.xlsx">web333k Ratios</a></li>
+            </div>
+            <li>Iteration 3</li>
+            <div style="padding-left: 10px">
+                <li><a href="./v3/indexing-scheme-analysis.xlsx">Indexing Scheme Analysis</a></li>
+                <li><a href="./v3/sentence-testing.xlsx">New Sentences Tests</a></li>
+                <li><a href="./v3/new-sentence-tests.xlsx">Old Sentence Tests</a></li>
+                <li><a href="./v3/zipf.xlsx">Zipf Distribution Charts</a></li>
+            </div>
         </ul>
     </main>
-    
-    <footer
-        style="position: fixed; bottom: 0px; left: 0.5%; width: 99%; margin: 0px; display: flex; flex-wrap: nowrap;">
+
+    <footer>
         <div style="width: 100%;">&copy; Copyright 2025 Brian Heers</div>
         <div style="width: 100%; text-align: right;">(Do not Copy)</div>
     </footer>
